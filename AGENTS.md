@@ -21,12 +21,12 @@ names does not belong here._
 
 <!-- generated:deps -->
 
-| Direction                                      | Packages                                 |
-| :--------------------------------------------- | :--------------------------------------- |
-| Imports (static)                               | —                                        |
-| Imports (soft, via `tryImportOptionalPackage`) | —                                        |
-| Imported by                                    | —                                        |
-| **Must never import**                          | nothing — no package depends on this one |
+| Direction                                      | Packages                                                                                |
+| :--------------------------------------------- | :-------------------------------------------------------------------------------------- |
+| Imports (static)                               | —                                                                                       |
+| Imports (soft, via `tryImportOptionalPackage`) | —                                                                                       |
+| Imported by                                    | `core`, `realtime`                                                                      |
+| **Must never import**                          | `core`, `realtime` — each already reaches this package, so importing one closes a cycle |
 
 Enforced by `deno task deps:analyze` against `deps.policy.jsonc`. A soft edge is
 deliberately **not** declared in this package's `deno.json`: the consuming
@@ -82,8 +82,7 @@ Anything not listed is internal and free to change.
 The framework-wide gate, from the repository root:
 
 ```bash
-deno fmt && deno lint && deno check && deno task test
-deno task deps:analyze     # cycles, declaration drift, tier policy
+deno task gate             # the full gate, as the pre-push hook runs it
 deno task agents:brief     # refresh this file's generated blocks
 ```
 
